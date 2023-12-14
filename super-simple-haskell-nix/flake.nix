@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -12,7 +12,7 @@
         devShells.default =
 	  pkgs.mkShellNoCC {
 	    name = "rules_nixpkgs_shell";
-	    packages = with pkgs; [ bazel_5 bazel-buildtools cacert nix git ];
+	    packages = with pkgs; [ bazel_6 bazel-buildtools cacert nix git ];
 	    shellHook = ''
 	      export PS1="\n[super-simple-cc-nix:\w]$ \0"
 	    '';
