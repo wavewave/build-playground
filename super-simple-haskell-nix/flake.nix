@@ -14,7 +14,7 @@
 	    name = "rules_nixpkgs_shell";
 	    packages = with pkgs; [ bazel_6 bazel-buildtools cacert nix git ];
 	    shellHook = ''
-	      export PS1="\n[super-simple-cc-nix:\w]$ \0"
+	      export PS1="\n[super-simple-haskell-nix:\w]$ \0"
 	    '';
 	  };
 	});
