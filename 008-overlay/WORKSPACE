@@ -1,0 +1,69 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "bazel_skylib",
+    urls = [
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz",
+    ],
+    sha256 = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94",
+)
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    strip_prefix = "rules_nixpkgs-0.10.0",
+    sha256 = "3744f41fb9de44e15861ac17909d3d3d7b15ad7d5147ab1a73a0da87591b7cdf",
+    urls = [
+        "https://github.com/tweag/rules_nixpkgs/archive/refs/tags/v0.10.0.tar.gz"
+    ],
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+rules_nixpkgs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_local_repository", "nixpkgs_cc_configure")
+nixpkgs_local_repository(
+    name = "nixpkgs",
+    nix_file = "//:nixpkgs.nix",
+    nix_file_deps = ["//:flake.lock"],
+)
+
+http_archive(
+    name = "rules_haskell",
+    sha256 = "298f6f0db23391274b4eca215daa01797d05699469048ef94540d5829b466377",
+    strip_prefix = "rules_haskell-0.17",
+    url = "https://github.com/tweag/rules_haskell/archive/refs/tags/v0.17.tar.gz",
+)
+
+load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
+rules_haskell_dependencies()
+
+load("@rules_haskell//haskell:nixpkgs.bzl", "haskell_register_ghc_nixpkgs")
+
+haskell_register_ghc_nixpkgs(
+    version = "9.6.2",
+    attribute_path = "",
+    nix_file = "//:ghc.nix",
+    repository = "@nixpkgs",
+)
+
+load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
+
+rules_haskell_toolchains(version = "9.6.2")
+
+####
+
+load(
+    "@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
+    "nixpkgs_cc_configure",
+    "nixpkgs_python_configure",
+)
+
+nixpkgs_cc_configure(
+    # Don't override the default cc toolchain needed for bindist mode.
+    name = "nixpkgs_config_cc",
+    repository = "@rules_haskell//nixpkgs:default.nix",
+)
+
+nixpkgs_python_configure(
+    repository = "@rules_haskell//nixpkgs:default.nix",
+)

@@ -1,0 +1,4 @@
+-*-*-*-
+THIS IS THE CONTENT OF
+myfile.txt
+-*-*-*-
