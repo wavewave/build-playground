@@ -29,9 +29,9 @@ nixpkgs_local_repository(
 
 http_archive(
     name = "rules_haskell",
-    sha256 = "298f6f0db23391274b4eca215daa01797d05699469048ef94540d5829b466377",
-    strip_prefix = "rules_haskell-0.17",
-    url = "https://github.com/tweag/rules_haskell/archive/refs/tags/v0.17.tar.gz",
+    sha256 = "9b933baa1fa4dccb69cd282ae85d90608ff71b7e64f6eac88353f57cfb5baff8",
+    strip_prefix = "rules_haskell-2ddda4966f37b325ca498ae3b125d41a92f8dbef",
+    url = "https://github.com/tweag/rules_haskell/archive/2ddda4966f37b325ca498ae3b125d41a92f8dbef.tar.gz",
 )
 
 load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
