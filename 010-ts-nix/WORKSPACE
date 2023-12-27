@@ -52,8 +52,8 @@ nixpkgs_python_configure(
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "dcc55f810142b6cf46a44d0180a5a7fb923c04a5061e2e8d8eb05ccccc60864b",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-5.8.0.tar.gz"],
+    sha256 = "94070eff79305be05b7699207fbac5d2608054dd53e6109f7d00d923919ff45a",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.2/rules_nodejs-5.8.2.tar.gz"],
 )
 
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
@@ -74,3 +74,26 @@ npm_install(
     package_json = "//:package.json",
     package_lock_json = "//:package-lock.json",
 )
+
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "7d964d57c6e9a54b0ce20f27e5ea84e5b42b6db2148ab7eb18d7110a082380de",
+    strip_prefix = "rules_ts-1.2.4",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v1.2.4/rules_ts-v1.2.4.tar.gz",
+)
+
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    ts_version_from = "//:package.json",
+)
+
+load(
+    "@aspect_bazel_lib//lib:repositories.bzl",
+    "register_copy_directory_toolchains",
+    "register_copy_to_directory_toolchains",
+)
+
+register_copy_directory_toolchains()
+
+register_copy_to_directory_toolchains()
