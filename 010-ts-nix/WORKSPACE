@@ -1,0 +1,76 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "bazel_skylib",
+    urls = [
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz",
+    ],
+    sha256 = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94",
+)
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    strip_prefix = "rules_nixpkgs-0.10.0",
+    sha256 = "3744f41fb9de44e15861ac17909d3d3d7b15ad7d5147ab1a73a0da87591b7cdf",
+    urls = [
+        "https://github.com/tweag/rules_nixpkgs/archive/refs/tags/v0.10.0.tar.gz"
+    ],
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+
+rules_nixpkgs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_local_repository")
+
+nixpkgs_local_repository(
+    name = "nixpkgs",
+    nix_file = "//:nixpkgs.nix",
+    nix_file_deps = ["//:flake.lock"],
+)
+
+
+####
+
+load(
+    "@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
+    "nixpkgs_cc_configure",
+    "nixpkgs_python_configure",
+)
+
+nixpkgs_cc_configure(
+    repository = "@nixpkgs",
+)
+
+nixpkgs_python_configure(
+    repository = "@nixpkgs",
+)
+
+##
+## javascript and typescript
+##
+
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "dcc55f810142b6cf46a44d0180a5a7fb923c04a5061e2e8d8eb05ccccc60864b",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-5.8.0.tar.gz"],
+)
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_nodejs_configure_platforms")
+nixpkgs_nodejs_configure_platforms(
+  name = "nixpkgs-nodejs",
+  repository = "@nixpkgs",
+)
+
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+npm_install(
+    name = "npm",
+    exports_directories_only = True,
+    node_repository = "nixpkgs-nodejs",
+    package_json = "//:package.json",
+    package_lock_json = "//:package-lock.json",
+)
