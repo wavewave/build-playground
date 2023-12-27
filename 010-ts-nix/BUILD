@@ -6,6 +6,9 @@ ts_project(
     name = "hello_ts",
     srcs = ["hello.ts"],
     tsconfig = "//:tsconfig.json",
+    data = [
+        "@npm//ololog"
+    ],
 )
 
 nodejs_binary(
